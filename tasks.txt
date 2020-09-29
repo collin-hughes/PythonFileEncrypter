@@ -1,0 +1,33 @@
+First time running => user creates account with password
+password is hashed and stored in a password file
+
+Following program runs => asks for password
+password is hashed and compared to password in password file
+
+If hash is correct, goes to dashboard
+Dashboard:
+    - Encrypt and Decrypt files
+    - Generate, store and access passwords (Like JSON)
+
+File manager: Program directory
+    [ ] file 1
+    [ ] file 2
+    [ ] file 3
+    [ ] file 4
+    [ ] file 5
+    [X] input.txt
+
+    [Save Changes]
+
+Encrypt input.txt, save it as input.bin, delete input.txt
+
+    [ ] file 1
+    [ ] file 2
+    [ ] file 3
+    [ ] file 4
+    [ ] file 5
+    [ ] input.bin
+
+    [Save Changes]
+
+Decrypts input.bin, save it as input.txt, delete input.bin
