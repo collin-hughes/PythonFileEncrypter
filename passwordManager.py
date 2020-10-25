@@ -69,18 +69,7 @@ def Run(key):
         else:
             print("Invalid choice!")
 
-def CreateNewPasswordEntry(key):
-    print("=" * 80)
-    service = input("Enter name of service: ")
-    username = input("Enter username for service: ")
-    password = getpass.getpass("Enter password for service: ")
-
-    newEntry = {
-        "service" : service,
-        "username" : username,
-        "password" : password
-    }
-
+def CreateNewPasswordEntry(key, newEntry):
     data, exists = GetFileData(key)
 
     if(exists):
@@ -89,9 +78,6 @@ def CreateNewPasswordEntry(key):
         entries.append(newEntry)
 
         StoreFileData(key, data)
-            
-        print("=" * 80)        
-        print("Entry created successfully!")
 
     else:
         CreatePasswordFile(newEntry, key)
@@ -103,7 +89,7 @@ def CreatePasswordFile(newEntry, key):
 
     StoreFileData(key, newDictionary)
 
-def GeneratePassword(length, numbers=True, symbols=True):
+def GeneratePassword(length=16, numbers=True, symbols=True):
     password = ""
     
     if(numbers and symbols):
@@ -196,8 +182,6 @@ def GetFileData(key):
                 data = json.loads(data)
 
     else:
-        print("=" * 80) 
-        print("Entries file does not exist.")
         data = None
         exists = False
 

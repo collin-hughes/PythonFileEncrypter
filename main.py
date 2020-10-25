@@ -1,13 +1,16 @@
 import passwordManager
 import getpass
 import utilities
+import sys
+import ui as UI
+from PyQt5 import QtCore, QtGui, QtWidgets
 from enum import Enum
 
 class FunctionType(Enum):
     FILES = 0
     PASSWORD = 1
 
-def main():
+def conMain():
     print("=" * 80)  
     masterPass = getpass.getpass("Enter master password: ")
     
@@ -46,4 +49,16 @@ def main():
     print("=" * 80)
     input("Press ENTER to close...")
 
-main()
+def winMain():
+    # Temporary
+    masterKey = utilities.GenerateKey("password")
+
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = UI.PasswordManager()
+    ui.setupUi(MainWindow, masterKey)
+
+    MainWindow.show()
+    sys.exit(app.exec_())
+
+winMain()
