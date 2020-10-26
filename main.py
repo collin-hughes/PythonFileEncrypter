@@ -50,15 +50,10 @@ def conMain():
     input("Press ENTER to close...")
 
 def winMain():
-    # Temporary
-    masterKey = utilities.GenerateKey("password")
-
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = UI.PasswordManager()
-    ui.setupUi(MainWindow, masterKey)
-
-    MainWindow.show()
+    controller = UI.Controller()
+    controller.ShowLogin()
     sys.exit(app.exec_())
+    
 
 winMain()
