@@ -1,6 +1,8 @@
 import passwordManager
 import utilities
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
+from Crypto.Cipher import AES
 
 class Controller():
     def __init__(self):
@@ -31,6 +33,7 @@ class Login(QtWidgets.QWidget):
         
         self.setWindowTitle("Datalocker Login")
         self.setFixedSize(300, 100)
+        self.setWindowIcon(QtGui.QIcon("resources/datalocker.png"))
 
         fullLayout = QtWidgets.QVBoxLayout()
         firstRowLayout = QtWidgets.QHBoxLayout()
@@ -76,6 +79,7 @@ class Error(QtWidgets.QWidget):
         
         self.setWindowTitle("Datalocker Login Error")
         self.setFixedSize(300, 100)
+        self.setWindowIcon(QtGui.QIcon("resources/datalocker.png"))
 
         self.layout = QtWidgets.QVBoxLayout()
 
@@ -104,6 +108,7 @@ class MainWindow(QtWidgets.QWidget):
         
         self.setWindowTitle("Datalocker - Home")
         self.setFixedSize(800, 360)
+        self.setWindowIcon(QtGui.QIcon("resources/datalocker.png"))
 
         self.key = key
 
@@ -113,6 +118,69 @@ class MainWindow(QtWidgets.QWidget):
 
         self.tabFile = QtWidgets.QWidget()
         self.tabFile.setObjectName("tabFile")
+
+        self.label = QtWidgets.QLabel("What would you like to do?", self.tabFile)
+        self.label.setGeometry(QtCore.QRect(10, 10, 161, 16))
+        self.label.setObjectName("label")
+        self.radioButton = QtWidgets.QRadioButton( "Create File?",self.tabFile)
+        self.radioButton.setGeometry(QtCore.QRect(10, 40, 95, 20))
+        self.radioButton.setObjectName("radioButton")
+        self.radioButton_2 = QtWidgets.QRadioButton("Delete File?", self.tabFile)
+        self.radioButton_2.setGeometry(QtCore.QRect(10, 70, 95, 20))
+        self.radioButton_2.setObjectName("radioButton_2")
+        self.radioButton_3 = QtWidgets.QRadioButton("View File?", self.tabFile)
+        self.radioButton_3.setGeometry(QtCore.QRect(10, 100, 95, 20))
+        self.radioButton_3.setObjectName("radioButton_3")
+
+        self.pushButton = QtWidgets.QPushButton("Submit", self.tabFile)
+        self.pushButton.setGeometry(QtCore.QRect(170, 190, 151, 71))
+        self.pushButton.setObjectName("pushButton")
+        self.lineEdit = QtWidgets.QLineEdit(self.tabFile)
+        self.lineEdit.setGeometry(QtCore.QRect(190, 60, 113, 22))
+        self.lineEdit.setObjectName("lineEdit")
+        self.label_2 = QtWidgets.QLabel("Enter File To Create", self.tabFile)
+        self.label_2.setGeometry(QtCore.QRect(190, 40, 151, 16))
+        self.label_2.setObjectName("label_2")
+        self.label_3 = QtWidgets.QLabel("Enter File To Delete", self.tabFile)
+        self.label_3.setGeometry(QtCore.QRect(190, 40, 121, 16))
+        self.label_3.setObjectName("label_3")
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.tabFile)
+        self.lineEdit_2.setGeometry(QtCore.QRect(190, 60, 113, 22))
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.label_4 = QtWidgets.QLabel("Enter File To View", self.tabFile)
+        self.label_4.setGeometry(QtCore.QRect(190, 40, 111, 16))
+        self.label_4.setObjectName("label_4")
+        self.lineEdit_3 = QtWidgets.QLineEdit(self.tabFile)
+        self.lineEdit_3.setGeometry(QtCore.QRect(190, 60, 113, 22))
+        self.lineEdit_3.setObjectName("lineEdit_3")
+
+        self.label_5 = QtWidgets.QLabel("Enter information for file", self.tabFile)
+        self.label_5.setGeometry(190,90,200,16)
+
+        self.lineEdit_5 = QtWidgets.QLineEdit(self.tabFile)
+        self.lineEdit_5.setGeometry(QtCore.QRect(190, 110, 200, 60))
+        
+        self.label_6 = QtWidgets.QLabel("File Contents", self.tabFile)
+        self.label_6.setGeometry(190,90,200,16)
+
+        self.lineEdit_6 = QtWidgets.QLineEdit(self.tabFile)
+        self.lineEdit_6.setGeometry(QtCore.QRect(190, 110, 200, 60))
+
+        self.label_2.hide()
+        self.label_3.hide()
+        self.label_4.hide()
+        self.lineEdit.hide()
+        self.lineEdit_2.hide()
+        self.lineEdit_3.hide()
+        self.label_5.hide()
+        self.lineEdit_5.hide()        
+        self.label_6.hide()
+        self.lineEdit_6.hide()
+
+        self.radioButton.toggled.connect(self.rbtn1toggle)
+        self.radioButton_2.toggled.connect(self.rbtn2toggle)
+        self.radioButton_3.toggled.connect(self.rbtn3toggle)
+        self.pushButton.clicked.connect(self.buttonClicked)
 
         self.tabs.addTab(self.tabFile, "File Manager")
 
@@ -268,3 +336,75 @@ class MainWindow(QtWidgets.QWidget):
         self.txtService.setText("")
         self.txtUsername.setText("")
         self.txtPassword.setText("")
+
+
+    def rbtn1toggle(self):
+        radioBtn = self.sender()
+        if radioBtn.isChecked():
+            self.label_2.show() 
+            self.lineEdit.show()
+            self.label_5.show()
+            self.lineEdit_5.show()
+        else:
+            self.label_2.hide()    
+            self.lineEdit.hide()
+            self.label_5.hide()
+            self.lineEdit_5.hide()
+
+    def rbtn2toggle(self):
+        radioBtn = self.sender()
+        if radioBtn.isChecked():
+            self.label_3.show() 
+            self.lineEdit_2.show()
+        else:
+            self.label_3.hide()   
+            self.lineEdit_2.hide()  
+
+    def rbtn3toggle(self):
+        radioBtn = self.sender()
+        if radioBtn.isChecked():
+            self.label_4.show() 
+            self.label_6.show() 
+            self.lineEdit_3.show()
+            self.lineEdit_6.show()
+        else:
+            self.label_4.hide()  
+            self.label_6.hide()  
+            self.lineEdit_3.hide()
+            self.lineEdit_6.hide()
+
+    def buttonClicked(self):
+        if (self.radioButton.isChecked()) and os.path.exists(os.path.join("filemanager", self.lineEdit.text())):
+            print("File Already Exists")
+        else:
+            if(self.radioButton.isChecked()):
+                data_str = self.lineEdit_5.text()
+                print (data_str)
+                data_str = bytes(data_str, 'utf-8')
+                file_out = open(os.path.join("filemanager", self.lineEdit.text()), "wb")
+                cipher = AES.new(self.key, AES.MODE_EAX)
+                ciphertext, tag = cipher.encrypt_and_digest(data_str)
+                [ file_out.write(x) for x in (cipher.nonce, tag, ciphertext) ]
+                file_out.close()
+                self.lineEdit.setText("")
+                self.lineEdit_5.setText("")
+                print("File created successfully")
+            else:
+                if((self.radioButton_2.isChecked()) and os.path.exists(os.path.join("filemanager", self.lineEdit_2.text()))):
+                    os.remove(os.path.join("filemanager", self.lineEdit_2.text()))
+                    self.lineEdit_2.setText("")
+                    print("File deleted")
+                else:
+                    if((self.radioButton_3.isChecked()) and os.path.exists(os.path.join("filemanager",self.lineEdit_3.text()))):
+                        file_in = open(os.path.join("filemanager", self.lineEdit_3.text()), "rb")
+                        nonce, tag, ciphertext = [ file_in.read(x) for x in (16, 16, -1) ]               
+                        cipher = AES.new(self.key, AES.MODE_EAX, nonce)
+                        data = cipher.decrypt_and_verify(ciphertext, tag)
+                        self.lineEdit_3.setText("")
+                        self.lineEdit_6.setText(data.decode("ascii"))
+                    
+                    else:
+                        self.lineEdit.setText("")
+                        self.lineEdit_2.setText("")
+                        self.lineEdit_3.setText("")
+                        print("File doesn't exist")

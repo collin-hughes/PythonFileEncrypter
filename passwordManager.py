@@ -13,62 +13,6 @@ class PwordManager(Enum):
     UPDATE = 2
     VIEW = 3
 
-def Run(key):
-    passManager = True
-    
-    while(passManager):
-        print("=" * 80)
-        print("Password Manager Options:")
-        for item in list(PwordManager):
-            print(item.value, "|", (item.name).capitalize())
-
-        print("=" * 80)        
-        choice = input("Enter an option or 'Q' to quit: ")
-        print("=" * 80)
-
-        if choice == "q" or choice == "Q":
-            passManager = False
-            print("Exiting...")
-
-        elif int(choice) == 0:
-            print("Loading password generator...")
-
-            length = int(input("Enter desired password length: "))
-            
-            incNums = input("Include numbers? (Y/N): ")
-
-            if(incNums == 'y' or incNums == "Y"):
-                incNums = True
-
-            else:
-                incNums = False
-            
-            incSym = input("Include symbols? (Y/N): ")
-
-            if(incSym == 'y' or incSym == "Y"):
-                incSym = True
-
-            else:
-                incSym = False
-            
-            print("=" * 80)
-            print("Generated password:", GeneratePassword(length, incNums, incSym))
-
-        elif int(choice) == 1:
-            print("Loading entry creator...")
-            CreateNewPasswordEntry(key)
-
-        elif int(choice) == 2:
-            print("Loading entry updater...")
-            UpdateEntry(key)
-
-        elif int(choice) == 3:
-            print("Loading entry viewer...")
-            ViewPasswordFile(key)
-
-        else:
-            print("Invalid choice!")
-
 def CreateNewPasswordEntry(key, newEntry):
     data, exists = GetFileData(key)
 
