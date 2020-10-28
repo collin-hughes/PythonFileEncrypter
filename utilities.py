@@ -29,12 +29,10 @@ def AuthenticatePassword(password):
             trueHashedPass = data["hash"]
 
         if(hashedPass.hexdigest() == trueHashedPass):
-            print("Authenticated successfully. Logging in...")
-            return True
+            return True, True
 
-        else:
-            print("Authentication failed")   
-            return False
+        else:  
+            return False, False
 
     else:
         hashedPass = SHA256.new()
@@ -48,4 +46,4 @@ def AuthenticatePassword(password):
             
             json.dump(data, f)
 
-            print("Password created and stored. Restart program to log in...")
+        return True, False

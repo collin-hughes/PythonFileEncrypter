@@ -11,6 +11,7 @@ class Controller():
     def ShowLogin(self):
         self.login = Login()
         self.login.switchWindow.connect(self.ShowMain)
+        self.login.created.connect(self.ShowCreated)
         self.login.failure.connect(self.ShowFailure)
         self.login.show()
 
@@ -19,6 +20,11 @@ class Controller():
         self.login.close()
         self.mainWindow.show()
 
+    def ShowCreated(self):
+        self.created = Created()
+        self.login.close()
+        self.created.show()
+
     def ShowFailure(self):
         self.error = Error()
         self.login.close()
@@ -26,6 +32,7 @@ class Controller():
 
 class Login(QtWidgets.QWidget):
     switchWindow = QtCore.pyqtSignal()
+    created = QtCore.pyqtSignal()
     failure = QtCore.pyqtSignal()
 
     def __init__(self):
@@ -65,12 +72,44 @@ class Login(QtWidgets.QWidget):
     def login(self):
         plainPass = self.txtPassword.text()
 
-        if(utilities.AuthenticatePassword(plainPass)):
+        auth, exists = utilities.AuthenticatePassword(plainPass)
+
+
+        if(auth and exists):
             self.key = utilities.GenerateKey(plainPass)
             self.switchWindow.emit()   
 
+        elif(auth and not exists):
+            self.created.emit()
+
         else:
             self.failure.emit()
+
+class Created(QtWidgets.QWidget):
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        
+        self.setWindowTitle("Datalocker Login Created")
+        self.setFixedSize(300, 100)
+        self.setWindowIcon(QtGui.QIcon("resources/datalocker.png"))
+
+        self.layout = QtWidgets.QVBoxLayout()
+
+        self.lblPassword = QtWidgets.QLabel("Password Created - Relaunch Program to Continue.")
+        self.lblPassword.setObjectName("lblPassword")
+        self.lblPassword.setAlignment(QtCore.Qt.AlignCenter)
+        self.layout.addWidget(self.lblPassword)
+
+        self.btnClose = QtWidgets.QPushButton("Close")
+        self.btnClose.setObjectName("btnClose")
+        self.btnClose.clicked.connect(self.Close)
+
+        self.layout.addWidget(self.btnClose)
+
+        self.setLayout(self.layout)
+
+    def Close(self):
+        QtCore.QCoreApplication.instance().quit()
 
 
 class Error(QtWidgets.QWidget):
@@ -374,6 +413,9 @@ class MainWindow(QtWidgets.QWidget):
             self.lineEdit_6.hide()
 
     def buttonClicked(self):
+        if(not os.path.exists("filemanager/")):
+            os.mkdir("filemanager")
+
         if (self.radioButton.isChecked()) and os.path.exists(os.path.join("filemanager", self.lineEdit.text())):
             print("File Already Exists")
         else:
